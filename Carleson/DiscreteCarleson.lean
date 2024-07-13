@@ -126,7 +126,7 @@ lemma ℭ₅_subset_ℭ₄ {k n j : ℕ} : ℭ₅ k n j ⊆ ℭ₄ (X := X) k n 
 
 /-- The set $\mathcal{P}_{F,G}$, defined in (5.1.24). -/
 def highDensityTiles : Set (𝔓 X) :=
-  { p : 𝔓 X | 2 ^ (2 * a + 5) * volume F / volume G ≤ dens₂ {p} }
+  { p : 𝔓 X | 2 ^ (2 * a + 5) * volume F / volume G < dens₂ {p} }
 
 /-- The exceptional set `G₁`, defined in (5.1.25). -/
 def G₁ : Set X := ⋃ (p : 𝔓 X) (_ : p ∈ highDensityTiles), 𝓘 p
