@@ -455,6 +455,24 @@ lemma second_exception : volume (G₂ (X := X)) ≤ 2 ^ (-4 : ℤ) * volume G :=
 /-- Lemma 5.2.7 -/
 lemma top_tiles : ∑ m ∈ Finset.univ.filter (· ∈ 𝔐 (X := X) k n), volume (𝓘 m : Set X) ≤
     2 ^ (n + k + 3) * volume G := by
+  simp_rw [← lintegral_indicator_one coeGrid_measurable]
+  rw [← lintegral_finset_sum _ (fun _ _ ↦ Measurable.indicator measurable_one coeGrid_measurable)]
+  have : ∀ (a : ℕ) (x : X),
+      (∑ m ∈ Finset.univ.filter (· ∈ 𝔐 (X := X) k n), ((𝓘 m) : Set X).indicator 1 x ≤ a * 2 ^ n) →
+      ∑ m ∈ Finset.univ.filter (· ∈ 𝔐 (X := X) k n), ((𝓘 m) : Set X).indicator 1 x ≤
+      2 ^ (n + 1) *
+      ∑ l : Finset.range ((𝔐 (X := X) k n).toFinset.card + 1), (setA l k n).indicator 1 x := by
+    intro a
+    induction' a
+    · simp_rw [zero_mul]
+      exact fun x hx ↦ hx.trans (Nat.zero_le _)
+    · sorry
+  have : ∀ x : X, ∑ m ∈ Finset.univ.filter (· ∈ 𝔐 (X := X) k n), ((𝓘 m) : Set X).indicator 1 x ≤
+      2 ^ (n + 1) *
+      ∑ l : Finset.range ((𝔐 (X := X) k n).toFinset.card + 1), (setA l k n).indicator 1 x := by
+    intro x
+
+    sorry
   sorry
 
 /-- Lemma 5.2.8 -/
