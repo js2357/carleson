@@ -71,7 +71,9 @@ lemma biSup {ι : Type*} (𝓑 : Set ι) {T : ι → (α → E₁) → α' → �
   push_neg at A0
   intro f g x hf hg
   simp only [Real.norm_eq_abs, abs_toReal]
-  rw [← toReal_add (hT f x hf) (hT g x hg), ← toReal_ofReal A0, ← toReal_mul]
+  refine le_trans ?_ <| mul_le_mul_of_nonneg_left
+    (toReal_le_add' (le_refl _) (fun h ↦ by simp [h]) (fun h ↦ by simp [h])) A0
+  rw [← toReal_ofReal A0, ← toReal_mul]
   apply toReal_mono <| mul_ne_top ofReal_ne_top (add_ne_top.mpr ⟨hT f x hf, hT g x hg⟩)
   simp only [iSup_le_iff]
   intro i hi
