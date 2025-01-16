@@ -292,7 +292,7 @@ lemma uncertainty (ha : 1 ≤ a) {p₁ p₂ : 𝔓 X} (hle : 𝔰 p₁ ≤ 𝔰 
           (le_trans hss (ball_subset_ball (by linarith))))) haux
       _ < 2^(6*a) := by
         nth_rewrite 2 [← mul_one (2^(6*a))]
-        exact mul_lt_mul_of_nonneg_of_pos' (le_refl _) hp₂ dist_nonneg (by positivity)
+        exact mul_lt_mul_of_nonneg_of_pos' (le_refl _) hp₂ dist_nonneg (pow_pos two_pos _)
   -- Auxiliary ineq. for 6.2.18
   have haux : dist_(p₁) (𝒬 p₁) (𝒬 p₂) ≤ (1 + 2^(6*a)) + dist_(p₁) (Q x₁) (Q x₂) :=
     calc dist_(p₁) (𝒬 p₁) (𝒬 p₂)

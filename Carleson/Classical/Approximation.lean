@@ -98,7 +98,7 @@ lemma periodic_deriv {𝕜 : Type} [NontriviallyNormedField 𝕜] {F : Type} [No
   have diff_g : Differentiable 𝕜 g := differentiable_id.add_const _
   have : deriv (f ∘ g) x = ((deriv f) ∘ g) x := by
     calc deriv (f ∘ g) x
-      _ = deriv g x • deriv f (g x) := deriv.scomp x (diff_f.differentiable (by norm_num)).differentiableAt diff_g.differentiableAt
+      _ = deriv g x • deriv f (g x) := deriv.scomp x (diff_f.differentiable (le_refl 1)).differentiableAt diff_g.differentiableAt
       _ = deriv f (g x) := by rw [gdef, deriv_add_const, deriv_id'']; simp
   rw [gdef] at this
   simp only [Function.comp_apply] at this
@@ -117,7 +117,7 @@ lemma fourierCoeffOn_ContDiff_two_bound {f : ℝ → ℂ} (periodicf : f.Periodi
   have h' : ∀ x ∈ Set.uIcc 0 (2 * π), HasDerivAt (deriv f) (deriv (deriv f) x) x := by
     intro x _
     rw [hasDerivAt_deriv_iff]
-    exact ((contDiff_succ_iff_deriv (n := 1)).mp fdiff).2.2.differentiable (by norm_num) _
+    exact ((contDiff_succ_iff_deriv (n := 1)).mp fdiff).2.2.differentiable (le_refl 1) _
   /-Get better representation for the fourier coefficients of f. -/
   have fourierCoeffOn_eq {n : ℤ} (hn : n ≠ 0): (fourierCoeffOn Real.two_pi_pos f n) = - 1 / (n^2) * fourierCoeffOn Real.two_pi_pos (fun x ↦ deriv (deriv f) x) n := by
     rw [fourierCoeffOn_of_hasDerivAt Real.two_pi_pos hn h, fourierCoeffOn_of_hasDerivAt Real.two_pi_pos hn h']

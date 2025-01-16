@@ -151,8 +151,8 @@ lemma lower_secant_bound' {η : ℝ}  {x : ℝ} (le_abs_x : η ≤ |x|) (abs_x_l
       · simp
         constructor <;> linarith [pi_nonneg]
       · rw [sub_nonneg, mul_comm]
-        exact mul_le_of_le_div₀ (by norm_num) (div_nonneg (by norm_num) pi_nonneg) (by simpa)
-      · exact mul_nonneg (div_nonneg (by norm_num) pi_nonneg) x_nonneg
+        exact mul_le_of_le_div₀ one_pos.le (div_nonneg two_pos.le pi_nonneg) (by simpa)
+      · exact mul_nonneg (div_nonneg two_pos.le pi_nonneg) x_nonneg
       · simp
     _ = Real.sin x := by field_simp
     _ ≤ Real.sqrt ((Real.sin x) ^ 2) := by
@@ -178,8 +178,8 @@ lemma lower_secant_bound' {η : ℝ}  {x : ℝ} (le_abs_x : η ≤ |x|) (abs_x_l
       · simp
         constructor <;> linarith [pi_nonneg]
       · rw [sub_nonneg, mul_comm]
-        exact mul_le_of_le_div₀ (by norm_num) (div_nonneg (by norm_num) pi_nonneg) (by simpa)
-      · exact mul_nonneg (div_nonneg (by norm_num) pi_nonneg) (by linarith [h])
+        exact mul_le_of_le_div₀ one_pos.le (div_nonneg two_pos.le pi_nonneg) (by simpa)
+      · exact mul_nonneg (div_nonneg two_pos.le pi_nonneg) (by linarith [h])
       · simp
     _ = 1 - Real.cos x := by congr; field_simp; ring
     _ ≤ Real.sqrt ((1 - Real.cos x) ^ 2) := by
@@ -208,7 +208,7 @@ lemma lower_secant_bound {η : ℝ} {x : ℝ} (xIcc : x ∈ Set.Icc (-2 * π + �
     rw [mul_assoc]
     gcongr
     field_simp
-    rw [div_le_div_iff₀ (by norm_num) pi_pos]
+    rw [div_le_div_iff₀ two_pos pi_pos]
     linarith [pi_le_four]
   _ ≤ ‖1 - Complex.exp (Complex.I * x)‖ := by
     apply lower_secant_bound' xAbs

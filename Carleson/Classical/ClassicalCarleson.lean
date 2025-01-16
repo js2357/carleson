@@ -19,7 +19,7 @@ theorem exceptional_set_carleson {f : ℝ → ℂ}
     ∃ N₀, ∀ x ∈ (Set.Icc 0 (2 * π)) \ E, ∀ N > N₀,
     ‖f x - S_ N f x‖ ≤ ε := by
   set ε' := ε / 4 / C_control_approximation_effect ε with ε'def
-  have ε'pos : ε' > 0 := div_pos (div_pos εpos (by norm_num))
+  have ε'pos : ε' > 0 := div_pos (div_pos εpos four_pos)
     (C_control_approximation_effect_pos εpos)
 
   /- Approximate f by a smooth f₀. -/
@@ -62,8 +62,8 @@ theorem exceptional_set_carleson {f : ℝ → ℂ}
   _ ≤ (ε / 2) + (ε / 4) + (ε / 4) := by
     gcongr
     rw [ε'def, div_div]
-    apply div_le_div_of_nonneg_left εpos.le (by norm_num)
-    rw [← div_le_iff₀' (by norm_num)]
+    apply div_le_div_of_nonneg_left εpos.le two_pos
+    rw [← div_le_iff₀' four_pos]
     exact le_trans' (lt_C_control_approximation_effect εpos).le (by linarith [Real.two_le_pi])
   _ ≤ ε := by linarith
 
@@ -107,7 +107,7 @@ theorem carleson_interval {f : ℝ → ℂ} (cont_f : Continuous f) (periodic_f 
       ← ENNReal.ofReal_mul' (by norm_num)]
     conv => pattern ENNReal.ofReal _; ring_nf; rw [ENNReal.ofReal_one]
     rw [one_mul]
-    norm_num
+    exact (div_pos one_pos two_pos).le
 
   -- Main step: Apply exceptional_set_carleson to get a family of exceptional sets parameterized by ε.
   choose Eε hEε_subset _ hEε_measure hEε using (@exceptional_set_carleson f cont_f periodic_f)

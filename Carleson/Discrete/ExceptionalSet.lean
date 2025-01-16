@@ -947,5 +947,5 @@ lemma exceptional_set : volume (G' : Set X) ≤ 2 ^ (-1 : ℤ) * volume G :=
       gcongr
       change ((2 : ℝ≥0) : ℝ≥0∞) * (2 : ℝ≥0) ^ (-4 : ℤ) + (2 : ℝ≥0) ^ (-2 : ℤ) ≤
         (2 : ℝ≥0) ^ (-1 : ℤ)
-      repeat rw [← ENNReal.coe_zpow (show (2 : ℝ≥0) ≠ 0 by norm_num)]
+      repeat rw [← ENNReal.coe_zpow two_ne_zero]
       rw_mod_cast [← NNReal.coe_le_coe]; norm_num

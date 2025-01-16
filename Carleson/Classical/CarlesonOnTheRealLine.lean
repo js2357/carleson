@@ -529,7 +529,7 @@ instance isOneSidedKernelHilbert : IsOneSidedKernel 4 K where
           exact div_nonneg (abs_nonneg (y - y')) (abs_nonneg (x - y))
         · field_simp
           apply div_le_one_of_le₀ <;> linarith [abs_nonneg (x - y)]
-        · norm_num
+        · exact (div_pos one_pos four_pos).le
         · norm_num
       · norm_num
   measurable_K := Hilbert_kernel_measurable
@@ -586,6 +586,6 @@ lemma rcarleson {F G : Set ℝ} (hF : MeasurableSet F) (hG : MeasurableSet G)
     _ ≤ ∫⁻ x in G, carlesonOperator K f x :=
       lintegral_mono (carlesonOperatorReal_le_carlesonOperator _)
     _ ≤ ENNReal.ofReal (C10_0_1 4 2) * (volume G) ^ (2 : ℝ)⁻¹ * (volume F) ^ (2 : ℝ)⁻¹ :=
-      two_sided_metric_carleson (a := 4) (by norm_num) (by simp) conj_exponents hF hG Hilbert_strong_2_2 f hmf hf
+      two_sided_metric_carleson (a := 4) (le_refl 4) (by simp) conj_exponents hF hG Hilbert_strong_2_2 f hmf hf
 
 end section

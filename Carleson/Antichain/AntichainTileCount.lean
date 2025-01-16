@@ -89,7 +89,7 @@ lemma tile_reach (ha : 4 ≤ a) {ϑ : Θ X} {N : ℕ} {p p' : 𝔓 X} (hp : dist
       _ = 1 * (D : ℝ) ^ 𝔰 p := by rw [one_mul]
       _ ≤ 4 * 2 ^ (2 - 5 * (a : ℤ) ^ 2 - 2 * ↑a) * D * D ^ 𝔰 p := by
         have h4 : (4 : ℝ) = 2^(2 : ℤ) := by ring
-        apply mul_le_mul _ (le_refl _) (by positivity) (by positivity)
+        apply mul_le_mul _ (le_refl _) (defaultD_pow_pos a _).le (by positivity)
         · have h12 : (1 : ℝ) ≤ 2 := one_le_two
           simp only [defaultD, Nat.cast_pow, Nat.cast_ofNat]
           rw [h4, ← zpow_natCast, ← zpow_add₀ two_ne_zero, ← zpow_add₀ two_ne_zero,
@@ -189,7 +189,7 @@ lemma stack_density (𝔄 : Finset (𝔓 X)) (ϑ : Θ X) (N : ℕ) (L : Grid X) 
         have hN4 : (2 : ℝ) ^ (N + 4) = 2 ^ (N + 1) * 2 ^ 3 := by ring
         refine ball_subset_ball ?_
         rw [← mul_one ((2 : ℝ)^ (N + 1) ), hN4, mul_assoc,
-          mul_le_mul_iff_of_pos_left (by positivity)]
+          mul_le_mul_iff_of_pos_left (pow_pos two_pos _)]
         norm_num
       have hballs : BallsCoverBalls (WithFunctionDistance (𝔠 p) (↑D ^ 𝔰 p / 4)) (2 ^ (N + 4) * 0.2)
         0.2 (defaultA a ^ (N + 4)) := ballsCoverBalls_iterate_nat

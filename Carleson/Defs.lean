@@ -228,6 +228,8 @@ and `CompatibleFunctions` -/
 @[simp] def defaultZ (a : ℕ) : ℕ := 2 ^ (12 * a)
 @[simp] def defaultτ (a : ℕ) : ℝ := a⁻¹
 
+lemma defaultA_pos {a : ℕ} : 0 < (defaultA a : ℝ) := by exact_mod_cast pow_pos two_pos a
+
 lemma defaultD_pos (a : ℕ) : 0 < (defaultD a : ℝ) := by rw [defaultD]; positivity
 
 lemma defaultD_pos' (a : ℕ) : 0 < defaultD a := by exact_mod_cast defaultD_pos a

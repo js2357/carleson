@@ -521,7 +521,7 @@ def C_control_approximation_effect (ε : ℝ) := (C10_0_1 4 2 * (8 / (π * ε)) 
 lemma lt_C_control_approximation_effect {ε : ℝ} (εpos : 0 < ε) : π < C_control_approximation_effect ε := by
   rw [C_control_approximation_effect]
   apply lt_add_of_pos_of_le _ (by rfl)
-  have := @C10_0_1_pos 4 2 (by norm_num)
+  have := @C10_0_1_pos 4 2 one_lt_two
   positivity
 
 lemma C_control_approximation_effect_pos {ε : ℝ} (εpos : 0 < ε) : 0 < C_control_approximation_effect ε :=
@@ -618,7 +618,7 @@ lemma control_approximation_effect {ε : ℝ} (εpos : 0 < ε) {δ : ℝ} (hδ :
   have E'volume_bound: ENNReal.ofReal (π * (ε' - π * δ)) * volume E' ≤ ENNReal.ofReal (δ * C10_0_1 4 2 * (4 * π) ^ (2 : ℝ)⁻¹) * (volume E') ^ (2 : ℝ)⁻¹ := by
     calc ENNReal.ofReal (π * (ε' - π * δ)) * volume E'
     _ = ENNReal.ofReal ((ε' - π * δ) * (2 * π)) / 2 * volume E' := by
-      rw [← ENNReal.ofReal_ofNat, ← ENNReal.ofReal_div_of_pos (by norm_num)]
+      rw [← ENNReal.ofReal_ofNat, ← ENNReal.ofReal_div_of_pos two_pos]
       ring_nf
     _ ≤ ENNReal.ofReal (δ * C10_0_1 4 2 * (2 * π + 2) ^ (2 : ℝ)⁻¹) * (volume E') ^ (2 : ℝ)⁻¹ := by
       rcases h with hE' | hE'
@@ -634,7 +634,7 @@ lemma control_approximation_effect {ε : ℝ} (εpos : 0 < ε) {δ : ℝ} (hδ :
   calc volume.real E
     _ ≤ 2 * volume.real E' := by
       --uses E'measure
-      rwa [measureReal_def, measureReal_def, ←@ENNReal.toReal_ofReal 2 (by norm_num),
+      rwa [measureReal_def, measureReal_def, ←@ENNReal.toReal_ofReal 2 two_pos.le,
         ←ENNReal.toReal_mul, ENNReal.toReal_le_toReal Evolume.ne, ENNReal.ofReal_ofNat]
       apply ENNReal.mul_ne_top ENNReal.ofReal_ne_top E'volume.ne
     _ = 2 * volume.real E' ^ ((1 + -(2 : ℝ)⁻¹) * 2) := by
@@ -644,7 +644,7 @@ lemma control_approximation_effect {ε : ℝ} (εpos : 0 < ε) {δ : ℝ} (hδ :
       rw [Real.rpow_mul measureReal_nonneg]
       gcongr
       rw [Real.rpow_add' measureReal_nonneg (by norm_num), Real.rpow_one, le_div_iff₀' ε'_δ_expression_pos, ← mul_assoc]
-      apply mul_le_of_le_div₀ δ_mul_const_pos.le (by positivity)
+      apply mul_le_of_le_div₀ δ_mul_const_pos.le (by exact?)
       rw [Real.rpow_neg measureReal_nonneg, div_inv_eq_mul,
         ← ENNReal.ofReal_le_ofReal_iff, ENNReal.ofReal_mul ε'_δ_expression_pos.le, measureReal_def,
         ENNReal.ofReal_toReal E'volume.ne]
@@ -658,5 +658,5 @@ lemma control_approximation_effect {ε : ℝ} (εpos : 0 < ε) {δ : ℝ} (hδ :
       rw [ε'def, C_control_approximation_effect_eq εpos.le, add_sub_cancel_right,
         mul_div_cancel₀ _ pi_pos.ne', div_mul_eq_div_div, div_self δ_mul_const_pos.ne', one_div,
         Real.inv_rpow (by positivity), ← Real.rpow_mul (by positivity),
-        inv_mul_cancel₀ (by norm_num), Real.rpow_one, inv_div]
+        inv_mul_cancel₀ two_ne_zero, Real.rpow_one, inv_div]
       ring
