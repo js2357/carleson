@@ -250,12 +250,26 @@ def czRemainder (ha : 4 ≤ a) (α : ℝ≥0∞) (x : X) : ℂ :=
 /-- Part of Lemma 10.2.5, this is essentially (10.2.16) (both cases). -/
 def tsum_czRemainder' (ha : 4 ≤ a) (hf : BoundedFiniteSupport f) (hX : GeneralCase f α) (x : X) :
     ∑ᶠ i, czRemainder' ha hX i x = czRemainder (f := f) ha α x := by
-  sorry
+  simp only [czRemainder', czRemainder]
+  by_cases hx : ∃ j, x ∈ czPartition ha hX j
+  · have ⟨j, hj⟩ := hx
+    rw [finsum_eq_single _ j, indicator_of_mem hj]
+    · rfl
+    · refine fun i hi ↦ indicator_of_notMem ?_ _
+      exact (czPartition_pairwiseDisjoint ha (mem_univ i) (mem_univ j) hi).notMem_of_mem_right hj
+  · simp only [czApproximation, hX, reduceDIte, hx, sub_self]
+    exact finsum_eq_zero_of_forall_eq_zero fun i ↦ indicator_of_notMem (fun hi ↦ hx ⟨i, hi⟩) _
 
 /-- Part of Lemma 10.2.5 (both cases). -/
 lemma measurable_czApproximation (ha : 4 ≤ a) {hf : BoundedFiniteSupport f} :
     Measurable (czApproximation (f := f) ha α) := by
-  sorry
+  unfold czApproximation
+  by_cases hX : GeneralCase f α
+  · simp [hX]
+
+    sorry
+  · simp [hX]
+
 
 /-- Part of Lemma 10.2.5, equation (10.2.16) (both cases).
 This is true by definition, the work lies in `tsum_czRemainder'` -/
