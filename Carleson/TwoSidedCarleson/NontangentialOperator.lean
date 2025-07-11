@@ -1,5 +1,6 @@
 import Carleson.ToMathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 import Carleson.ToMathlib.MeasureTheory.Integral.Lebesgue
+import Carleson.ToMathlib.Topology.Instances.NNReal.Lemmas
 import Carleson.TwoSidedCarleson.WeakCalderonZygmund
 
 open MeasureTheory Set Bornology Function ENNReal Metric
@@ -823,13 +824,45 @@ theorem simple_nontangential_operator (ha : 4 ≤ a)
   nth_rw 5 [pow_succ]; rw [mul_two]
   gcongr <;> simp
 
-/-- Monotone convergence applied to eLpNorms. AEMeasurable variant.
-  Possibly imperfect hypotheses, particularly on `p`. -/
-theorem eLpNorm_iSup' {α : Type*} [MeasurableSpace α] {μ : Measure α} {p : ℝ≥0∞}
+/- theorem Filter.eventually_le_of_limsup_le {α β : Type*} {m : MeasurableSpace α}
+    {μ : MeasureTheory.Measure α} [ConditionallyCompleteLinearOrder β] {x : β} {f : α → β}
+    (hx : essSup f μ ≤ x)
+    (hf : Filter.IsBoundedUnder (fun (x1 x2 : β) => x1 ≤ x2) (ae μ) f := by isBoundedDefault) :
+    ∀ᵐ y ∂μ, f y ≤ x := by
+  apply eventually_le_limsup -/
+
+theorem essSup_iSup {α β : Type*} [MeasurableSpace α] [Countable β]
+    {μ : Measure α} {f : β → α → ℝ≥0∞} :
+    essSup (⨆ n, f n) μ = ⨆ n, essSup (f n) μ := by
+  refine le_antisymm (le_iSup_iff.mpr fun b hb ↦ ?_) (iSup_le fun n ↦ ?_)
+  · apply essSup_le_of_ae_le
+    simp only [Filter.EventuallyLE, Filter.Eventually, iSup_apply, iSup_le_iff, setOf_forall]
+    refine countable_iInter_mem.mpr (fun n ↦ ?_)
+    simp only [ae, Filter.mem_ofCountableUnion, compl_setOf, not_le, ← nonpos_iff_eq_zero]
+    exact le_trans (measure_mono (fun _ ↦ (hb n).trans_lt)) (meas_essSup_lt (f := f n)).le
+  · exact essSup_mono_ae <| Filter.Eventually.of_forall ((le_iSup_iff (s := f)).mpr (fun _ h ↦ h n))
+
+theorem eLpNorm'_iSup {α : Type*} [MeasurableSpace α] {μ : Measure α} {p : ℝ} (hp : p ≥ 0)
+    {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, AEMeasurable (f n) μ) (h_mono : ∀ᵐ x ∂μ, Monotone fun n ↦ f n x) :
+     eLpNorm' (⨆ n, f n) p μ  = ⨆ n, eLpNorm' (f n) p μ := by
+  obtain hp | hp := hp.eq_or_gt
+  · simp [hp]
+  simp only [eLpNorm', enorm_eq_self, iSup_apply]
+  have := lintegral_iSup' hf h_mono
+  simp_rw [ENNReal.iSup_rpow _ hp.le]
+  rw [← ENNReal.iSup_rpow _ (one_div_pos.mpr hp), lintegral_iSup' (hf · |>.pow_const p) <|
+    h_mono.mono (fun _ ↦ (ENNReal.monotone_rpow_of_nonneg hp.le).comp)]
+
+/-- Monotone convergence applied to eLpNorms. AEMeasurable variant. -/
+theorem eLpNorm_iSup {α : Type*} [MeasurableSpace α] {μ : Measure α} {p : ℝ≥0∞}
     {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, AEMeasurable (f n) μ) (h_mono : ∀ᵐ x ∂μ, Monotone fun n => f n x) :
-    ⨆ n, eLpNorm (f n) p μ = eLpNorm (⨆ n, f n) p μ := by
-  -- lintegral_iSup'
-  sorry
+    eLpNorm (⨆ n, f n) p μ = ⨆ n, eLpNorm (f n) p μ := by
+  by_cases hp : p = ∞
+  · simp only [hp, eLpNorm_exponent_top, eLpNormEssSup, enorm_eq_self]; apply essSup_iSup
+  by_cases hp0 : p = 0
+  · simp [hp0]
+  simp only [eLpNorm, hp0, reduceIte, hp]
+  exact eLpNorm'_iSup toReal_nonneg hf h_mono
 
 /-- This is the first step of the proof of Lemma 10.0.2, and should follow from 10.1.6 +
 monotone convergence theorem. (measurability should be proven without any restriction on `r`.) -/
@@ -865,10 +898,10 @@ theorem simple_nontangential_operator_le (ha : 4 ≤ a)
     have : ⨆ x' ∈ ball x R, ‖czOperator K R g x'‖ₑ = seq n := by unfold seq; rw [iSup_pos hn]
     nth_rw 1 [this]
     exact le_iSup seq n
-  have mct := eLpNorm_iSup' (p := 2) (f := f) (μ := volume)
+  have mct := eLpNorm_iSup (p := 2) (f := f) (μ := volume)
     (fun n ↦ aestronglyMeasurable_simpleNontangentialOperator.aemeasurable)
     (by filter_upwards; exact f_mon)
-  rw [← snt0, ← mct]
+  rw [← snt0, mct]
   apply iSup_le
   intro n; unfold f
   apply simple_nontangential_operator ha hT (by positivity) g hg |>.2
